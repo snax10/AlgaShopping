@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
+import { HomeView } from './views/Home.view';
 
 
 ReactDOM.render(
   <>
-    <App />
+    <HomeView />
   </>,
   document.getElementById('root')
 );
