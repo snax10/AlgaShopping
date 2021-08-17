@@ -1,7 +1,10 @@
 import React from 'react'
+import { App } from '../components/App'
 
 export function HomeView() {
   return (
-    <h1>Home view</h1>
+    <div>
+      <App />
+    </div>
   )
 }
