@@ -7,6 +7,7 @@ import { AppContainer } from '../AppContainer/AppContainer'
 import { AppHeader } from '../AppHeader/AppHeader'
 import { LineChart } from '../../shared/LineChart/LineChart'
 import { ShoppingList } from '../ShoppingList/ShoppingList'
+import extractPercentage from '../../utils/extractPercentage'
 
 
 export function App() {
@@ -14,14 +15,22 @@ export function App() {
 
   const [products, setProducts] = useState(productsMock.products)
   const [selectedProducts, setSelectedProducts] = useState([])
-
+  const [totalPrice, setTotalPrice] = useState(0)
 
   useEffect(() => {
     const newSelectedProducts = products.filter(product => product.checked === true)
+
     setSelectedProducts(newSelectedProducts)
   }, [products])
 
-  function hanldeToggle(id, checked) {
+  useEffect(() => {
+    const totalPrice = selectedProducts.map(product => product.price)
+      .reduce((a, b) => a + b, 0)
+
+    setTotalPrice(totalPrice)
+  }, [selectedProducts])
+
+  function handleToggle(id, checked) {
     const newProducts = products.map(product => product.id === id ?
       { ...product, checked: !product.checked }
       : product
@@ -38,23 +47,60 @@ export function App() {
             <ShoppingList
               title="Produtos disponíveis"
               products={products}
-              onToggle={hanldeToggle}
+              onToggle={handleToggle}
             />}
 
           middle={
             <ShoppingList
               title="Sua lista de compras"
               products={selectedProducts}
-              onToggle={hanldeToggle}
+              onToggle={handleToggle}
             />}
 
           right={<div>
             Estatísticas
 
-            <LineChart color={colors[0]} title="saudável" percentage={80} />
-            <LineChart color={colors[1]} title="não tão saudável" percentage={20} />
-            <LineChart color={colors[2]} title="limpeza" percentage={35} />
-            <LineChart color={colors[3]} title="outros" percentage={15} />
+            <LineChart
+              color={colors[0]}
+              title="saudável"
+              percentage={extractPercentage(
+                selectedProducts.length,
+                selectedProducts.filter(product => product.tags.includes('healthy')).length
+              )}
+            />
+            <LineChart
+              color={colors[1]}
+              title="não tão saudável"
+              percentage={extractPercentage(
+                selectedProducts.length,
+                selectedProducts.filter(product => product.tags.includes('junk')).length
+              )}
+            />
+            <LineChart
+              color={colors[2]}
+              title="limpeza"
+              percentage={extractPercentage(
+                selectedProducts.length,
+                selectedProducts.filter(product => product.tags.includes('cleaning')).length
+              )}
+            />
+            <LineChart
+              color={colors[3]}
+              title="outros"
+              percentage={extractPercentage(
+                selectedProducts.length,
+                selectedProducts.filter(product => product.tags.includes('others', 'higiene')).length
+              )}
+            />
+
+            <div style={{ marginTop: 12 }}>
+              <h2 style={{ fontSize: 12, fontWeight: 400, color: '#003644' }}>
+                Previsão de gastos:
+                <div style={{ fontSize: 24 }}>
+                  {totalPrice.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' })}
+                </div>
+              </h2>
+            </div>
           </div>}
         />
       </Container>

@@ -8,6 +8,8 @@ export function LineChart({ title, percentage, color }) {
         {title}
       </span>
 
+      {percentage.toFixed(1)}%
+
       <ProgressBar
         percentage={percentage}
         color={color}

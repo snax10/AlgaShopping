@@ -11,12 +11,15 @@ export function ShoppingList({ title, products, onToggle }) {
       <Array>
         {
           products.map(product => (
+            <>
             <Checkbox 
               key={product.id}
-              value={product.checked} 
+              value={product.checked}
               title={product.name} 
               onClick={() => onToggle(product.id, product.checked) }
             />
+            <span>R${product.price}</span>
+            </>
           ))
         }
       </Array>
