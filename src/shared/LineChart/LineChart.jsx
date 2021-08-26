@@ -5,10 +5,8 @@ export function LineChart({ title, percentage, color }) {
   return (
     <Wrapper>
       <span>
-        {title}
+        {title} -  { percentage.toFixed(2) >= 1 ? percentage : 0 }%
       </span>
-
-      {percentage.toFixed(1)}%
 
       <ProgressBar
         percentage={percentage}
